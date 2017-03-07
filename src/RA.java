@@ -16,6 +16,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.event.*;
+import javax.swing.text.JTextComponent;
 
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.FileUserDictionary;
@@ -149,7 +150,6 @@ public class RA {
 		};
 	
 	public RA() {
-		
 		/* give os look and feel */
 		/*
 	    try {
@@ -161,10 +161,8 @@ public class RA {
 	        e.printStackTrace();
 	    }
 	    */
-		
 	    /* set agent name from file */
 		this.setAgentName();
-		
 		/* deserialize file into Store object */
 		RA.store = new Store();
 		File fi = new File("./store.serialized");
@@ -181,25 +179,29 @@ public class RA {
 				catch (Exception ex) { ex.printStackTrace(); }
 			}
 		}
-		
 		/* menus at top */
 		JMenuBar menu_bar = new JMenuBar();
 		JMenu file_menu = new JMenu("File");
 		JMenuItem quit_jmi = new JMenuItem("Quit");
-		quit_jmi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 
+		quit_jmi.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_Q, 
 				ActionEvent.CTRL_MASK));
 		JMenuItem generate_jmi = new JMenuItem("Generate");
-		generate_jmi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G,
+		generate_jmi.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_G,
 				ActionEvent.CTRL_MASK));
 		generate_jmi.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent arg0) {
 				JDialog.setDefaultLookAndFeelDecorated(true);
-				Object[] values = {"View & Edit", 
+				Object[] values = {
+						"View & Edit", 
 						"Copy to Clipboard"};
 				String initial_selection = "View & Edit";
 				generate_selection = JOptionPane.showInputDialog(frame, 
 						"", 
-						"", JOptionPane.QUESTION_MESSAGE, null, 
+						"", 
+						JOptionPane.QUESTION_MESSAGE, 
+						null, 
 						values, initial_selection);
 				if (generate_selection == "Copy to Clipboard") {
 					/* copy to clipboard */
@@ -209,9 +211,13 @@ public class RA {
 							.getSystemClipboard();
 					clipboard.setContents(selection, null);
 					/* notify on copy to clipboard */
-					final JOptionPane optionPane = new JOptionPane("Copied to Clipboard.", 
+					final JOptionPane optionPane = new JOptionPane(
+							"Copied to Clipboard.", 
 							JOptionPane.INFORMATION_MESSAGE, 
-							JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+							JOptionPane.DEFAULT_OPTION, 
+							null, 
+							new Object[]{}, 
+							null);
 					final JDialog dialog = new JDialog();
 					dialog.setTitle("Request Assistance");
 					dialog.setAlwaysOnTop(true);
@@ -232,10 +238,10 @@ public class RA {
 				}
 				if (generate_selection == "View & Edit") {
 					JTextArea jta = new JTextArea(35, 35);
-//					jta.addMouseListener(new ContextMenuMouseListener());
 					jta.setText(RA.generate());
 					jta.setLineWrap(true);
 					jta.setWrapStyleWord(true);
+					RA.initializeSpellcheck(jta);
 					JOptionPane.showMessageDialog(frame, new BubbleScrollPane(jta));
 				}
 		}});
@@ -400,7 +406,6 @@ public class RA {
 		agent_desc_jta.setEditable(true);
 		JTextField tmp_jtf = new JTextField();
 		tmp_jtf.setEditable(false);
-//		agent_desc_jta.addMouseListener(new ContextMenuMouseListener());
 		//TODO
 		agent_desc_jta.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BubbleScrollPane agent_desc_jsp = new BubbleScrollPane(agent_desc_jta);
@@ -453,7 +458,6 @@ public class RA {
 		customer_desc_jta.setWrapStyleWord(true);
 		customer_desc_jta.setEditable(false);
 		customer_desc_jta.setBackground(tmp_jtf.getBackground());
-//		customer_desc_jta.addMouseListener(new ContextMenuMouseListener());
 		customer_desc_jta.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BubbleScrollPane desc_jsp = new BubbleScrollPane(customer_desc_jta);
 		desc_jsp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -504,7 +508,6 @@ public class RA {
 		recent_history_jta.setLineWrap(true);
 		recent_history_jta.setWrapStyleWord(true);
 		recent_history_jta.setEditable(true);
-//		recent_history_jta.addMouseListener(new ContextMenuMouseListener());
 		recent_history_jta.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BubbleScrollPane recent_history_jsp = new BubbleScrollPane(recent_history_jta);
 		recent_history_jsp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -610,7 +613,6 @@ public class RA {
 		called_jl.setFont(jlabel_font.deriveFont(Font.BOLD));
 		called_jtf = new JTextField();
 		called_jtf.setEditable(true);
-//		called_jtf.addMouseListener(new ContextMenuMouseListener());
 		called_jtf.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.BLACK),
 				BorderFactory.createEmptyBorder(5,5,5,5)
@@ -744,7 +746,6 @@ public class RA {
 		steps_jta.setText("• ");
 		steps_jta.setLineWrap(true);
 		steps_jta.setWrapStyleWord(true);
-//		steps_jta.addMouseListener(new ContextMenuMouseListener());
 		steps_jta.getDocument().addDocumentListener(new DocumentListener() {
 			@Override public void changedUpdate(DocumentEvent arg0) { }
 			@Override public void insertUpdate(DocumentEvent arg0) {
@@ -864,10 +865,10 @@ public class RA {
 				
 				else if (view_edit_jtb.isSelected()) {
 					JTextArea jta = new JTextArea(35, 35);
-//					jta.addMouseListener(new ContextMenuMouseListener());
 					jta.setText(RA.generate());
 					jta.setLineWrap(true);
 					jta.setWrapStyleWord(true);
+					RA.initializeSpellcheck(jta);
 					JOptionPane.showMessageDialog(frame, 
 							new BubbleScrollPane(jta));
 				}
@@ -879,7 +880,6 @@ public class RA {
 							.getSystemClipboard();
 					clipboard.setContents(selection, null);
 					JTextArea jta = new JTextArea(35, 35);
-//					jta.addMouseListener(new ContextMenuMouseListener());
 					jta.setText(RA.generate());
 					jta.setLineWrap(true);
 					jta.setWrapStyleWord(true);
@@ -917,7 +917,6 @@ public class RA {
 		top_pane.add(customer_next_actions_pane);
 		
 		JPanel main_pane = new JPanel();
-//		main_pane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		main_pane.setLayout(new BorderLayout());
 		main_pane.add(top_pane, BorderLayout.NORTH);
 		main_pane.add(generate_pane, BorderLayout.CENTER);
@@ -932,7 +931,6 @@ public class RA {
 		call = new Call();
 		String callTitle = "Call";
 		tab.addTab(callTitle, call);
-		//tab.addTab("Email", new JPanel());
 		tab.addTab("Notes", new Notes());
 		tab.addMouseListener(new MouseAdapter() {
 			@Override public void mouseClicked(MouseEvent e) {
@@ -1048,10 +1046,8 @@ public class RA {
 				}
 			}
 		});
-		
 		/* initialize spell check for text fields */
 		this.initializeSpellcheck();
-		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
 		frame = new JFrame();
@@ -1072,6 +1068,11 @@ public class RA {
 		frame.setTitle("HCRT: Request Assistance");
 	}
 	
+	/**
+	 * Sets the agent name variable from 'name.txt.' This appears in the title 
+	 * on generate as: HCRT L3 Agent NAME Engaged : MODEL : ISSUE : #hashtag
+	 * 
+	 */
 	public void setAgentName() {
 		String name = "null";
 		try {
@@ -1110,7 +1111,7 @@ public class RA {
 	}
 	
 	/** 
-	 * Resets the "view" to defaults.
+	 * Resets the "view" to default selections.
 	 */
 	public static void reset() {
 		called_pane.setBackground(RA.bleach(Color.BLUE, (float)0.85));
@@ -1201,8 +1202,10 @@ public class RA {
 	}
 	
 	/**
+	 * Set the fields to the values stored in the object being recalled 
+	 * and then update the view. 
 	 * 
-	 * @param o
+	 * @param o The RA object to recall. 
 	 */
 	public static void recall(Obj o) {
 		called_jcb.setSelected(o.called_checked);
@@ -1265,25 +1268,22 @@ public class RA {
 	}
 	
 	/**
-	 * 
+	 * Export to text file (archive) and serialized file (memory).
 	 */
 	public static void export() {
 		//create dir 'export' if dne
 		new File("./export").mkdirs();
-		
 		//determine file name
 		String fileName = new SimpleDateFormat("yyyyMMddhhmm'.txt'").format(new Date());
 		fileName = "./export/" + fileName;
 		if (!sr_pane.get_text().trim().isEmpty()) {
 			fileName = "./export/" + sr_pane.get_text().trim() + ".txt";
 		}
-		
 		//create file if dne
 		File f = new File(fileName);
 		try {
 			f.createNewFile(); //create file - do nothing if file exists
 		} catch (IOException ex) { ex.printStackTrace(); }
-		
 		//write string to file
 		try (PrintWriter out = new PrintWriter(fileName)) {
 			String str = generate();
@@ -1291,7 +1291,6 @@ public class RA {
 				out.println(s);	
 			}
 		} catch (FileNotFoundException e) { e.printStackTrace(); }
-		
 		//create obj
 		Obj o = new Obj();
 		o.called_checked = called_jcb.isSelected();
@@ -1304,7 +1303,7 @@ public class RA {
 		o.dc_sess_checked = dc_sess_id_pane.isChecked(); 
 		o.parent_sr_checked = parent_sr_pane.isChecked(); 
 		o.fusion_checked = fusion_pane.isChecked(); 
-		o.entitlement_checked = support_checkbox.isSelected(); //TODO is this correct? 
+		o.entitlement_checked = support_checkbox.isSelected();
 		o.invoice_checked = invoice_pane.isChecked(); 
 		o.submitter_checked = submitter_pane.isChecked(); 
 		o.financial_impact_checked = finacial_impact_pane.isChecked(); 
@@ -1349,10 +1348,8 @@ public class RA {
 		o.current_phone = Call.called_jtf.getText();
 		o.current_timestamp = Call.timestamp;
 		o.current_call_checked = Call.called_jcb.isSelected();
-		
 		//add obj to store
 		RA.store.add(o);
-		
 		//create/update serialized file
 		ObjectOutputStream oos = null;
 		try {
@@ -1364,11 +1361,11 @@ public class RA {
 			try { oos.close(); } 
 			catch (Exception e) { e.printStackTrace(); }
 		}
-		
 	}
 	
 	/**
-	 * 
+	 * Update the view for the current selections. Set text, colors of fields, 
+	 * which fields are editable, etc. 
 	 */
 	public static void updateView() {
 		/* called */
@@ -1483,8 +1480,53 @@ public class RA {
 	}
 	
 	/**
+	 * Returns a string representation of the checked fields on the RA tab. 
 	 * 
-	 * @return
+	 * @return <html>String conforming to RA template.<br><br><b>Example</b>: <br>
+	 * <br>
+	 * SR# <i>VALUE</i><br>
+	 * SR Title: 
+	 * HCRT L3 Agent <i>NAME</i> Engaged : <i>VALUE</i> : <i>VALUE</i> : <i>#hashtag</i><br>
+	 * <br>
+	 * Customer Description (Symptoms): <i>VALUE</i><br>
+	 * <br>
+	 * Agent Description (Actual Problem): <i>VALUE</i><br>
+	 * <br>
+	 * ** Summary **<br>
+	 * Initial Call: <i>VALUE</i> <br>
+	 * DellConnect/WebEx Session ID: <i>VALUE</i><br>
+	 * Parent SR#: <i>VALUE</i><br>
+	 * Fusion #: <i>VALUE</i><br>
+	 * <br>
+	 * ~~Research Details~~<br>
+	 * 	• Summary of Issue: <i>VALUE</i><br>
+	 * 	• Support Entitlement: ProSupport<br>
+	 * 	• Invoice Date: <i>VALUE</i><br>
+	 * 	• Recent Service History (Past 6 Months): <i>VALUE</i><br>
+	 * 	• Submitter: <i>VALUE</i><br>
+	 * 	• Financial Impact: <i>VALUE</i><br>
+	 * 	• Relevant Oracle KB Articles: <i>VALUE</i><br>
+	 * 	• SIT: <i>VALUE</i><br>
+	 * 	• CLCA Needed/Submitted?: <i>VALUE</i><br>
+	 * <br>
+	 * ** Troubleshooting **<br>
+	 * ~~System Information~~<br>
+	 * 	• BIOS Version: <i>VALUE</i><br>
+	 * 	• OS: Windows 7 Professional 64-bit<br>
+	 * 	• Peripherals: <i>VALUE</i><br>
+	 * 	• RAID Level and Drive Configuration: <i>VALUE</i><br>
+	 * <br>
+	 * ~~Steps Taken~~<br>
+	 * 	Called customer at: <i>VALUE</i> <br>
+	 * 	Call Log:<br>
+	 * 	• <i>VALUE</i><br>
+	 * 	• <i>VALUE</i><br>
+	 * <br>
+	 * ** Next Steps **<br>
+	 * <br>
+	 * HCRT Next Actions: <i>VALUE</i><br>
+	 * Customer's Next Actions: <i>VALUE</i><br>
+	 * <html>
 	 */
 	public static String generate() {
 		StringBuilder sb = new StringBuilder();
@@ -1662,7 +1704,7 @@ public class RA {
 	}
 	
 	/**
-	 *
+	 * Adds the right-click popup menu for copy/paste/spell check/etc. 
 	 */
 	public void initializeSpellcheck() {
 		String dictionaryPath = ("./dictionary/");
@@ -1676,7 +1718,18 @@ public class RA {
 		SpellChecker.enableShortKey(steps_jta, true);
 		SpellChecker.register(Notes.notes_jta);
 		SpellChecker.register(Call.steps_jta);
-		//TODO ...
+		SpellChecker.register(new JTextArea()); //TODO fix issue with JOrtho
+		//TODO add additional fields
+	}
+	
+	/**
+	 * Adds right-click popup menu for copy/paste/spell check/etc to a 
+	 * particular field.  
+	 * 
+	 * @param c	The field to add 
+	 */
+	public static void initializeSpellcheck(JTextComponent c) {
+		SpellChecker.register(c);
 	}
 	
 	/**

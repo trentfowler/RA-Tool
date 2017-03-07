@@ -20,11 +20,11 @@ import org.w3c.dom.NodeList;
  * Launcher for program. 
  * 
  * @author Trent
- * @version 1.2
+ * @version 1.3
  */
 public class Launcher {
 	
-	static final double VERSION = 1.2;
+	static final double VERSION = 1.3;
 	RA ra = new RA();
 	ClosingFrame cf = new ClosingFrame();
 	
@@ -85,9 +85,8 @@ class HTTPXML {
 	/* start */
 	void start() throws Exception {
 		/* configure to use system proxy settings */
-		System.setProperty("java.net.useSystemProxies", "true");
+		//TODO System.setProperty("java.net.useSystemProxies", "true");
         URL url = new URL("http://trenthome.duckdns.org:8000/hcrt/tool/version.xml");
-		//TODO URL url = new URL("http://192.168.1.125:8000/hcrt/tool/version.xml");
         URLConnection connection = url.openConnection();
         Document doc = parseXML(connection.getInputStream());
         NodeList node = doc.getElementsByTagName("VERSION");
@@ -100,7 +99,6 @@ class HTTPXML {
         	if (selection == JOptionPane.YES_OPTION) {
         		FileUtils.copyURLToFile(
         				new URL("http://trenthome.duckdns.org:8000/hcrt/tool/hcrttool.jar"),
-        				//new URL("http://192.168.1.125:8000/hcrt/tool/hcrttool.jar"),
         				new File("./hcrttool_v" + node.item(0).getTextContent() + ".jar"));
         		/* downloading... message */
 				final JOptionPane optionPane = new JOptionPane("<html><i>Downloading...</i></html>", 
@@ -118,7 +116,7 @@ class HTTPXML {
 					private static final long serialVersionUID = 1L;
 					@Override public void actionPerformed(ActionEvent ae) {
 				        dialog.dispose();
-				        /* complete... message */
+				        //complete... message
 				        Object[] options = {"OK"};
 				        int n = JOptionPane.showOptionDialog(RA.frame, 
 				        		"<html><u>Success!</u><br>Quit <i>(Ctrl-Q)</i> and Launch hcrttool_v" + 
@@ -130,7 +128,7 @@ class HTTPXML {
 				        		options, 
 				        		options[0]
 				        );
-				        /* quit */
+				        //quit
 				        if (n == 1) {
 							RA.export();
 							System.exit(0);

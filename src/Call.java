@@ -28,10 +28,7 @@ public class Call extends JPanel {
 	static JToggleButton view_edit_jtb;
 	
 	public Call() {
-		
-		/*
-		 * Call section
-		 */
+		/* call section */
 		called_pane = new JPanel();
 		called_pane.setBackground(RA.bleach(Color.BLUE, (float)0.85));
 		called_pane.setBorder(BorderFactory.createCompoundBorder(
@@ -44,7 +41,6 @@ public class Call extends JPanel {
 		called_jl.setFont(jlabel_font.deriveFont(Font.BOLD));
 		called_jtf = new JTextField();
 		called_jtf.setEditable(true);
-//		called_jtf.addMouseListener(new ContextMenuMouseListener());
 		called_jtf.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.BLACK),
 				BorderFactory.createEmptyBorder(5,5,5,5)
@@ -94,15 +90,11 @@ public class Call extends JPanel {
 		called_subpane.add(called_jb_jp, BorderLayout.EAST);
 		called_pane.add(called_subpane, BorderLayout.CENTER);
 		called_pane.add(called_jcb, BorderLayout.EAST);
-		
-		/*
-		 * Steps section
-		 */
+		/* steps section */
 		steps_jta = new JTextArea(15, 15);
 		steps_jta.setText("• ");
 		steps_jta.setLineWrap(true);
 		steps_jta.setWrapStyleWord(true);
-//		steps_jta.addMouseListener(new ContextMenuMouseListener());
 		steps_jta.getDocument().addDocumentListener(new DocumentListener() {
 			@Override public void changedUpdate(DocumentEvent arg0) { }
 			@Override public void insertUpdate(DocumentEvent arg0) {
@@ -137,7 +129,6 @@ public class Call extends JPanel {
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 		topPanel.add(called_pane);
-		//...
 		/* generate panel */
 		JPanel generatePanel = new JPanel();
 		JButton generate_jb = new JButton("Generate");
@@ -153,9 +144,13 @@ public class Call extends JPanel {
 							.getSystemClipboard();
 					clipboard.setContents(selection, null);
 					/* notify on copy to clipboard */
-					final JOptionPane optionPane = new JOptionPane("Copied to Clipboard.", 
+					final JOptionPane optionPane = new JOptionPane(
+							"Copied to Clipboard.", 
 							JOptionPane.INFORMATION_MESSAGE, 
-							JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+							JOptionPane.DEFAULT_OPTION, 
+							null, 
+							new Object[]{}, 
+							null);
 					final JDialog dialog = new JDialog();
 					dialog.setTitle("Call");
 					dialog.setAlwaysOnTop(true);
@@ -175,10 +170,10 @@ public class Call extends JPanel {
 					dialog.setVisible(true);
 				} else {
 					JTextArea jta = new JTextArea(35, 35);
-//					jta.addMouseListener(new ContextMenuMouseListener());
 					jta.setText(generate());
 					jta.setLineWrap(true);
 					jta.setWrapStyleWord(true);
+					RA.initializeSpellcheck(jta);
 					JOptionPane.showMessageDialog(RA.frame, new BubbleScrollPane(jta));
 				}
 			}
