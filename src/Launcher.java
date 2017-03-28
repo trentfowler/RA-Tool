@@ -20,11 +20,11 @@ import org.w3c.dom.NodeList;
  * Launcher for program. 
  * 
  * @author Trent
- * @version 1.3
+ * @version 1.4
  */
 public class Launcher {
 	
-	static final double VERSION = 1.3;
+	static final double VERSION = 1.4;
 	RA ra = new RA();
 	ClosingFrame cf = new ClosingFrame();
 	

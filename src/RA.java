@@ -257,7 +257,7 @@ public class RA {
 		reset_jmi.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent arg0) {
 				int selection = JOptionPane.showConfirmDialog(frame,
-						"Erase and start over?",
+						"Save and start over?",
 						"Reset",
 						JOptionPane.YES_NO_OPTION);
 				if (selection == JOptionPane.YES_OPTION) {
@@ -823,7 +823,7 @@ public class RA {
 		start_over_jb.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent arg0) {
 				int selection = JOptionPane.showConfirmDialog(frame,
-						"Erase and start over?",
+						"Save and start over?",
 						"Reset",
 						JOptionPane.YES_NO_OPTION);
 				if (selection == JOptionPane.YES_OPTION) {
@@ -1056,12 +1056,14 @@ public class RA {
 		frame.setSize(510, 650);
 		frame.setMinimumSize(new Dimension(510, 300));
 		//allow vertical resize only
+		/*
 		frame.addComponentListener(new ComponentAdapter() {
 			@Override public void componentResized(ComponentEvent e) {
 		        frame.setSize(new Dimension(510, frame.getHeight()));
 		        super.componentResized(e);
 		    }
 		});
+		*/
 		frame.setLocationRelativeTo(null);
 		frame.setAlwaysOnTop(true);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -1718,6 +1720,9 @@ public class RA {
 		SpellChecker.enableShortKey(steps_jta, true);
 		SpellChecker.register(Notes.notes_jta);
 		SpellChecker.register(Call.steps_jta);
+		SpellChecker.register(ClosingFrame.jta);
+		SpellChecker.register(ClosingFrame.how_resolved_jta);
+		SpellChecker.register(ClosingFrame.service_history_jta);
 		SpellChecker.register(new JTextArea()); //TODO fix issue with JOrtho
 		//TODO add additional fields
 	}

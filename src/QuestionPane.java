@@ -88,6 +88,19 @@ public class QuestionPane extends JPanel {
 			 this.yes_no_jcb.setSelectedIndex(QuestionPane.NO_ANSWER);
 //		else if (default_answer == QuestionPane.EXCLUDE_ANSWER)
 //			 this.yes_no_jcb.setSelectedIndex(QuestionPane.EXCLUDE_ANSWER);
+		if (this.default_checked_status == true) {
+			yes_no_jcb.setEnabled(true);
+			yes_no_jcb.setBackground(Color.WHITE);
+			jcb.setSelected(true);
+			bleach(Color.BLUE, (float)0.85);
+		} else {
+			yes_no_jcb.setEnabled(false);
+			JComboBox<Object> tmp = new JComboBox<Object>();
+			tmp.setEnabled(false);
+			yes_no_jcb.setBackground(tmp.getBackground());
+			jcb.setSelected(false);
+			bleach(Color.BLACK, (float)0.85);
+		}
 	}
 	
 	private void background(Color color) {
